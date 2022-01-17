@@ -23,14 +23,15 @@ void walk()
 {
     std::mt19937                    rng{std::random_device{}()};
     std::uniform_int_distribution   startColumn{0,dim-1};
-    std::discrete_distribution      direction{100,100,100,125};
+    std::discrete_distribution      direction{100,100,80,100};
 
-    while(!done)
+    while(   !done
+          && startRow > 0)
     {
         int row   =startRow;
         int column=startColumn(rng);
 
-        while(startRow > 0)
+        while(row > 0)
         {
             auto step=direction(rng);
 

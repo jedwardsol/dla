@@ -17,7 +17,7 @@ namespace
 {
 HWND                theWindow   {};
 constexpr int       WM_REFRESH  {WM_APP};
-constexpr auto      windowStyle { WS_OVERLAPPED | WS_CAPTION  | WS_SYSMENU  | WS_VISIBLE    };
+constexpr auto      windowStyle { WS_OVERLAPPED | WS_CAPTION  | WS_MINIMIZE | WS_SYSMENU  | WS_VISIBLE    };
 
 
 void drawThread()
@@ -65,6 +65,7 @@ LRESULT CALLBACK proc(HWND h, UINT m, WPARAM w, LPARAM l)
         AdjustWindowRect(&client,windowStyle,FALSE);
         SetWindowPos(h, nullptr,0,0, client.right-client.left, client.bottom-client.top, SWP_NOMOVE|SWP_NOZORDER);
         GetClientRect(h,&client);
+        SetForegroundWindow(h);
 
         return 0;
     }
