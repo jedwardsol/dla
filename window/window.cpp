@@ -17,7 +17,7 @@ namespace
 {
 HWND                theWindow   {};
 constexpr int       WM_REFRESH  {WM_APP};
-constexpr auto      windowStyle { WS_OVERLAPPED | WS_CAPTION  | WS_MINIMIZE | WS_SYSMENU  | WS_VISIBLE    };
+constexpr auto      windowStyle { WS_OVERLAPPED | WS_CAPTION  |  WS_SYSMENU  | WS_MINIMIZEBOX | WS_VISIBLE    };
 
 
 void drawThread()
