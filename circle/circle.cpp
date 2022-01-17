@@ -14,13 +14,13 @@ void initBitmap()
     bitmapData[dim/2][dim/2]= Colour::set;
 }
 
-constexpr int gap{100};
+constexpr int gap{50};
 double        radius{gap};
 
 void walk()
 {
     std::mt19937                            rng{std::random_device{}()};
-    std::discrete_distribution              direction{100,100,100,100};
+    std::uniform_int_distribution           direction{-1,1};
 
     std::uniform_real_distribution<double>  angle{0, 2*std::numbers::pi};
 
@@ -33,8 +33,6 @@ void walk()
         int row   = dim/2 + static_cast<int>(radius * std::sin(startAngle));
         int column= dim/2 + static_cast<int>(radius * std::cos(startAngle));
 
-        bitmapData[row][column]=50;
-
         auto distance = [&]
         {
             auto dr = row-dim/2;
@@ -45,19 +43,10 @@ void walk()
 
         while(distance() < dim/2)
         {
-            auto step=direction(rng);
+            column+=direction(rng);
+            row   +=direction(rng);
 
-            switch(step)
-            {
-            case 0: column--; break;
-            case 1: column++; break;
-            case 2: row--;    break;
-            case 3: row++;    break;
-            }
-
-            bitmapData[row][column]=10;
-
-            if(   bitmapData[row+1][column] == 255
+            if(   bitmapData[row+1] [column] == 255
                 || bitmapData[row-1][column] == 255
                 || bitmapData[row  ][column-1] == 255
                 || bitmapData[row  ][column+1] == 255)
