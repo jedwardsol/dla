@@ -59,12 +59,12 @@ void walk()
 
             if(row!=0)
             {
-                if(   bitmapData[row+1][column] == 255
-                   || bitmapData[row-1][column] == 255
-                   || bitmapData[row  ][column-1] == 255
-                   || bitmapData[row  ][column+1] == 255)
+                if(   bitmapData[row+1][column] 
+                   || bitmapData[row-1][column] 
+                   || bitmapData[row  ][column-1] 
+                   || bitmapData[row  ][column+1] )
                 {
-                    bitmapData[row][column]=255;
+                    bitmapData[row][column]= 1+(row % 255) ;
 
                     startRow = std::min(startRow, row-gap);
 

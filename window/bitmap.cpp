@@ -5,13 +5,80 @@
 #include <cstddef>
 #include <utility>
 #include <mutex>
-
+#include <cassert>
 
 #include "bitmap.h"
 
 
 namespace
 {
+
+
+RGBQUAD fromHCXM(double Hprime, double chroma, double X, double m)
+{
+    RGBQUAD rgb{};
+
+    auto scale = [&](double d)
+    {
+        return static_cast<BYTE>(256*(d+m));
+    };
+
+    if(Hprime < 1)
+    {
+        rgb.rgbRed   = scale(chroma);
+        rgb.rgbGreen = scale(X); 
+        rgb.rgbBlue  = scale(0); 
+    }
+    else if(Hprime < 2)
+    {
+        rgb.rgbRed   = scale(X); 
+        rgb.rgbGreen = scale(chroma);
+        rgb.rgbBlue  = scale(0); 
+    }
+    else if(Hprime < 3)
+    {
+        rgb.rgbRed   = scale(0); 
+        rgb.rgbGreen = scale(chroma);
+        rgb.rgbBlue  = scale(X); 
+    }
+    else if(Hprime < 4)
+    {
+        rgb.rgbRed   = scale(0); 
+        rgb.rgbGreen = scale(X); 
+        rgb.rgbBlue  = scale(chroma);
+    }
+    else if(Hprime < 5)
+    {
+        rgb.rgbRed   = scale(X); 
+        rgb.rgbGreen = scale(0); 
+        rgb.rgbBlue  = scale(chroma);
+    }
+    else 
+    {
+        rgb.rgbRed   = scale(chroma);
+        rgb.rgbGreen = scale(0); 
+        rgb.rgbBlue  = scale(X);
+    }
+
+    return rgb;
+}
+
+
+RGBQUAD fromHSL(double H, double S, double L)
+{
+    assert( H>= 0 && H <= 1);
+    assert( S>= 0 && S <= 1);
+    assert( L>= 0 && L <= 1);
+
+    auto Hprime = H*6;
+    auto chroma = (1 - std::abs(2 * L - 1)) * S;
+    auto X      = chroma * (1 - std::abs (std::fmod(Hprime,2)  -1 ))  ;
+    auto m      = L - chroma/2;
+
+    return fromHCXM(Hprime,chroma,X,m);
+}
+
+
 
 auto makeHeader()
 {
@@ -29,12 +96,12 @@ auto makeHeader()
     header->bmiHeader.biClrUsed         = 0;
     header->bmiHeader.biClrImportant    = 0;
 
-    for(int i=0;i<=255;i++)
+    header->bmiColors[0]= RGBQUAD{};
+
+    for(int i=1;i<256;i++)
     {
-        header->bmiColors[i]= RGBQUAD(i,i,i);
+        header->bmiColors[i]= fromHSL(i/256.0,.99,0.5);
     }
-                                                  //  B    G    R
-    header->bmiColors[Colour::set]        = RGBQUAD(255, 255, 255);
 
     return header;
 }

@@ -46,12 +46,12 @@ void walk()
             column+=direction(rng);
             row   +=direction(rng);
 
-            if(   bitmapData[row+1] [column] == 255
-                || bitmapData[row-1][column] == 255
-                || bitmapData[row  ][column-1] == 255
-                || bitmapData[row  ][column+1] == 255)
+            if(   bitmapData[row+1] [column] 
+                || bitmapData[row-1][column] 
+                || bitmapData[row  ][column-1] 
+                || bitmapData[row  ][column+1] )
             {
-                bitmapData[row][column]=255;
+                bitmapData[row][column]=1 + ((int)distance() % 255);
 
                 radius = std::max(radius, distance()+gap);
 

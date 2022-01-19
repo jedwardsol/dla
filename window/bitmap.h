@@ -6,7 +6,7 @@
 #include <cstdint>
 
 
-constexpr int dim{800};
+constexpr int dim{1000};
 
 // palette entries
 enum Colour
